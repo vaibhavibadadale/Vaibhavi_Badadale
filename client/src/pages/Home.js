@@ -1,4 +1,3 @@
-import { fetchUsers, createUser } from '../services/api';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -6,14 +5,17 @@ import { Link } from 'react-router-dom';
 const Home = () => {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
+    
+    // Live Backend URL
+    const BASE_URL = "https://vaibhavi-badadale-5.onrender.com";
 
     const fetchUsers = async () => {
-        const res = await axios.get(`http://localhost:5000/api/users?search=${search}`);
+        const res = await axios.get(`${BASE_URL}/api/users?search=${search}`);
         setUsers(res.data.users);
     };
 
     const handleExport = () => {
-        window.open('http://localhost:5000/api/export', '_blank');
+        window.open(`${BASE_URL}/api/exportcsv`, '_blank');
     };
 
     useEffect(() => { fetchUsers(); }, [search]);
@@ -34,7 +36,7 @@ const Home = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user, i) => (
+                    {users && users.map((user, i) => (
                         <tr key={user._id}>
                             <td>{i + 1}</td>
                             <td>{user.firstName} {user.lastName}</td>
