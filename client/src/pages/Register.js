@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getUserByIdApi, editUserApi, addUserApi } from '../services/api';
 
 const Register = ({ isEdit }) => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const BASE_URL = "https://vaibhavi-badadale-5.onrender.com";
 
     const [user, setUser] = useState({
         firstName: '', lastName: '', email: '', mobile: '',
@@ -16,7 +15,7 @@ const Register = ({ isEdit }) => {
 
     useEffect(() => {
         if (isEdit && id) {
-            axios.get(`${BASE_URL}/api/user/${id}`)
+            getUserByIdApi(id)
                 .then(res => setUser(res.data))
                 .catch(err => toast.error("Failed to fetch user data."));
         }
@@ -33,10 +32,10 @@ const Register = ({ isEdit }) => {
 
         try {
             if (isEdit) {
-                await axios.put(`${BASE_URL}/api/edit/${id}`, user);
+                await editUserApi(id, user);
                 toast.success("User profile updated!");
             } else {
-                await axios.post(`${BASE_URL}/api/add`, user);
+                await addUserApi(user);
                 toast.success("User registered!");
             }
             setTimeout(() => navigate('/'), 2000);

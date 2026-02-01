@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { EXPORT_URL } from '../services/api'; // Using centralized URL
 
 const BASE_URL = "https://vaibhavi-badadale-5.onrender.com"; 
 
@@ -37,7 +38,8 @@ const UserList = () => {
                 <input type="text" className="form-control w-25 shadow-sm" placeholder="Search..." onChange={(e) => setSearch(e.target.value)} />
                 <div>
                     <Link to="/register" className="btn btn-danger me-2">+ Add User</Link>
-                    <a href={`${BASE_URL}/api/exportcsv`} className="btn btn-primary">Export CSV</a>
+                    {/* Updated to use EXPORT_URL */}
+                    <a href={EXPORT_URL} className="btn btn-primary">Export CSV</a>
                 </div>
             </div>
             <div className="table-responsive shadow rounded">

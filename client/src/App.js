@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { fetchUsers, createUser } from '../services/api';
 import UserList from './pages/UserList'; 
 import Register from './pages/Register';
 import UserDetails from './pages/UserDetails';
@@ -15,12 +14,12 @@ function App() {
           <Route path="/" element={<UserList />} />
           
           {/* 2. Add details form page */}
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Register isEdit={false} />} />
           
           {/* 3. Edit details form page */}
           <Route path="/edit/:id" element={<Register isEdit={true} />} />
           
-          {/* 4. View details page (Your creativity) */}
+          {/* 4. View details page */}
           <Route path="/user/:id" element={<UserDetails />} />
         </Routes>
       </div>

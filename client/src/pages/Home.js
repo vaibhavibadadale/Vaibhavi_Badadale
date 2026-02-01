@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { fetchUsersApi, EXPORT_URL, deleteUserApi } from '../services/api';
 
 const Home = () => {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
-    
-    // Live Backend URL
-    const BASE_URL = "https://vaibhavi-badadale-5.onrender.com";
 
     const fetchUsers = async () => {
-        const res = await axios.get(`${BASE_URL}/api/users?search=${search}`);
-        setUsers(res.data.users);
+        try {
+            const res = await fetchUsersApi(search);
+            setUsers(res.data.users);
+        } catch (err) {
+            console.error("Error fetching users", err);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you sure you want to delete this user?")) {
+            await deleteUserApi(id);
+            fetchUsers();
+        }
     };
 
     const handleExport = () => {
-        window.open(`${BASE_URL}/api/exportcsv`, '_blank');
+        window.open(EXPORT_URL, '_blank');
     };
 
     useEffect(() => { fetchUsers(); }, [search]);
@@ -46,6 +54,7 @@ const Home = () => {
                             <td>
                                 <Link className="btn btn-sm btn-info me-2" to={`/user/${user._id}`}>View</Link>
                                 <Link className="btn btn-sm btn-warning me-2" to={`/edit/${user._id}`}>Edit</Link>
+                                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(user._id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
