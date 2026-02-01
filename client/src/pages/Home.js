@@ -6,62 +6,57 @@ const Home = () => {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
 
-    const fetchUsers = async () => {
+    const loadData = async () => {
         try {
             const res = await fetchUsersApi(search);
             setUsers(res.data.users);
-        } catch (err) {
-            console.error("Error fetching users", err);
-        }
+        } catch (err) { console.log(err); }
     };
+
+    useEffect(() => { loadData(); }, [search]);
 
     const handleDelete = async (id) => {
-        if (window.confirm("Are you sure you want to delete this user?")) {
+        if (window.confirm("Delete this user?")) {
             await deleteUserApi(id);
-            fetchUsers();
+            loadData();
         }
     };
-
-    const handleExport = () => {
-        window.open(EXPORT_URL, '_blank');
-    };
-
-    useEffect(() => { fetchUsers(); }, [search]);
 
     return (
         <div className="container mt-4">
-            <div className="d-flex justify-content-between mb-3">
-                <input type="text" placeholder="Search..." onChange={(e) => setSearch(e.target.value)} className="form-control w-25" />
+            <div className="d-flex justify-content-between mb-3 align-items-center">
+                <input type="text" className="form-control w-25 shadow-sm" placeholder="Search..." onChange={(e) => setSearch(e.target.value)} />
                 <div>
                     <Link to="/register" className="btn btn-danger me-2">+ Add User</Link>
-                    <button onClick={handleExport} className="btn btn-primary">Export To Csv</button>
+                    <a href={EXPORT_URL} className="btn btn-primary" target="_blank" rel="noreferrer">Export To Csv</a>
                 </div>
             </div>
-            <table className="table border shadow">
-                <thead className="table-dark">
-                    <tr>
-                        <th>ID</th><th>FullName</th><th>Email</th><th>Gender</th><th>Status</th><th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users && users.map((user, i) => (
-                        <tr key={user._id}>
-                            <td>{i + 1}</td>
-                            <td>{user.firstName} {user.lastName}</td>
-                            <td>{user.email}</td>
-                            <td>{user.gender === 'Male' ? 'M' : 'F'}</td>
-                            <td>{user.status}</td>
-                            <td>
-                                <Link className="btn btn-sm btn-info me-2" to={`/user/${user._id}`}>View</Link>
-                                <Link className="btn btn-sm btn-warning me-2" to={`/edit/${user._id}`}>Edit</Link>
-                                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(user._id)}>Delete</button>
-                            </td>
+            <div className="table-responsive shadow-sm rounded border bg-white">
+                <table className="table table-hover align-middle mb-0">
+                    <thead className="table-dark">
+                        <tr>
+                            <th>ID</th><th>FullName</th><th>Email</th><th>Gender</th><th>Status</th><th>Action</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {users.map((u, i) => (
+                            <tr key={u._id}>
+                                <td>{i + 1}</td>
+                                <td className="fw-bold">{u.firstName} {u.lastName}</td>
+                                <td>{u.email}</td>
+                                <td>{u.gender === 'Male' ? 'M' : 'F'}</td>
+                                <td><span className={`badge ${u.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>{u.status}</span></td>
+                                <td>
+                                    <Link to={`/user/${u._id}`} className="btn btn-sm btn-info text-white me-2">View</Link>
+                                    <Link to={`/edit/${u._id}`} className="btn btn-sm btn-warning text-white me-2">Edit</Link>
+                                    <button onClick={() => handleDelete(u._id)} className="btn btn-sm btn-outline-danger">Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
-
 export default Home;

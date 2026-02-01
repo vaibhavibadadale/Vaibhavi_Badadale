@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import UserList from './pages/UserList'; 
 import Register from './pages/Register';
 import UserDetails from './pages/UserDetails';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
