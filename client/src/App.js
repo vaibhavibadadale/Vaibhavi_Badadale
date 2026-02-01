@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
+import { fetchUsers, createUser } from '../services/api';
 import UserList from './pages/UserList'; 
 import Register from './pages/Register';
 import UserDetails from './pages/UserDetails';
